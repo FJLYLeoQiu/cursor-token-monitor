@@ -1,1 +1,1 @@
-$(cat /tmp/statusBar_updated.ts)
+PLACEHOLDER_STATUSBAR

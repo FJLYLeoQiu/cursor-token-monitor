@@ -1,1 +1,1 @@
-PLACEHOLDER
+$(cat /tmp/cursorApi_updated.ts)

@@ -222,6 +222,9 @@ function buildTooltip(auth: CursorAuthData, usage: UsageSnapshot, settings: Cock
       ? `Used: ${centsToDollars(usage.planUsage.includedSpend)} / ${centsToDollars(usage.planUsage.limit)}`
       : undefined,
     usage.planUsage ? `Remaining: ${centsToDollars(usage.planUsage.remaining)}` : undefined,
+    usage.sandUsage
+      ? `Grok Bot: ${usage.sandUsage.usagePercent.toFixed(0)}% used${usage.sandUsage.nextResetTimestampUtc ? ` (resets ${new Date(usage.sandUsage.nextResetTimestampUtc).toLocaleDateString()})` : ''}`
+      : undefined,
     insights[0] ? `Insight: ${insights[0].title}` : undefined,
     autoEst.autoEventCount
       ? `Auto estimate: ${autoEst.likelyModels.slice(0, 3).join(', ') || '—'} (${autoEst.confidence})`

@@ -1,6 +1,8 @@
 # Cursor Usage Tray - Pure PowerShell
 # Run: powershell -ExecutionPolicy Bypass -File .\CursorUsageTray.ps1
 
+Write-Host "Starting Cursor Usage Tray..." -ForegroundColor Cyan
+
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 
@@ -10,6 +12,11 @@ $notify = New-Object System.Windows.Forms.NotifyIcon
 $notify.Icon = [System.Drawing.SystemIcons]::Information
 $notify.Text = "Cursor Usage: loading..."
 $notify.Visible = $true
+
+# Show balloon so user knows it started
+$notify.BalloonTipTitle = "Cursor Usage Tray"
+$notify.BalloonTipText = "Running. Hover the tray icon (check ^ overflow if hidden)."
+$notify.ShowBalloonTip(4000)
 
 $menu = New-Object System.Windows.Forms.ContextMenuStrip
 $refreshItem = $menu.Items.Add("Refresh")
@@ -22,7 +29,7 @@ $exitItem.add_Click({ $script:done = $true })
 function Get-CursorToken {
     $dbPath = Join-Path $env:APPDATA "Cursor\User\globalStorage\state.vscdb"
     if (-not (Test-Path $dbPath)) {
-        throw "Cursor DB not found. Please login to Cursor first."
+        throw "Cursor DB not found. Login to Cursor first."
     }
 
     if (Get-Command sqlite3 -ErrorAction SilentlyContinue) {
@@ -34,7 +41,7 @@ function Get-CursorToken {
     $token = python -c $pyCode 2>$null
     if ($token) { return $token.Trim() }
 
-    throw "Cannot read token. Install Python or sqlite3."
+    throw "Cannot read token. Need Python or sqlite3."
 }
 
 function Invoke-CursorApi {
@@ -53,6 +60,7 @@ function Invoke-CursorApi {
 
 function Update-Usage {
     try {
+        Write-Host "Refreshing usage..." -ForegroundColor Yellow
         $token = Get-CursorToken
         $period = Invoke-CursorApi "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage" $token
         $sand   = Invoke-CursorApi "https://api2.cursor.sh/aiserver.v1.DashboardService/GetSandUsageStatus" $token
@@ -72,13 +80,16 @@ function Update-Usage {
 
         $text = "Cursor Models: $cursorPct%`nOther Models: $otherPct%`nGrok Bot: $botPct%"
         $notify.Text = $text
+        Write-Host $text -ForegroundColor Green
 
         $max = [Math]::Max($cursorPct, [Math]::Max($otherPct, $botPct))
         if ($max -ge 85) { $notify.Icon = [System.Drawing.SystemIcons]::Error }
         elseif ($max -ge 60) { $notify.Icon = [System.Drawing.SystemIcons]::Warning }
         else { $notify.Icon = [System.Drawing.SystemIcons]::Information }
     } catch {
-        $notify.Text = "Error: $($_.Exception.Message)"
+        $msg = $_.Exception.Message
+        $notify.Text = "Error: $msg"
+        Write-Host "Error: $msg" -ForegroundColor Red
     }
 }
 
@@ -89,12 +100,16 @@ $timer.Interval = 300000
 $timer.add_Tick({ Update-Usage })
 $timer.Start()
 
+Write-Host "Tray is running. Look at the notification area (click ^ if icon is hidden)." -ForegroundColor Cyan
+Write-Host "Right-click the icon to Refresh or Exit. This window can stay open." -ForegroundColor Cyan
+
 try {
     while (-not $script:done) {
         [System.Windows.Forms.Application]::DoEvents()
         Start-Sleep -Milliseconds 200
     }
 } finally {
+    Write-Host "Exiting..." -ForegroundColor Cyan
     $timer.Stop()
     $notify.Visible = $false
     $notify.Dispose()

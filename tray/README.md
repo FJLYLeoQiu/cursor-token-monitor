@@ -1,39 +1,31 @@
 # Cursor Usage Tray
 
-独立的 Windows 系统托盘应用，显示 Cursor Models / Other Models / Grok Bot 用量百分比。
+Windows 系统托盘监控 Cursor Models / Other Models / Grok Bot 用量。
+
+## 推荐：纯 PowerShell 版（零安装）
+
+不需要 `npm install`，直接运行：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\CursorUsageTray.ps1
+```
+
+或右键 → 使用 PowerShell 运行。
 
 **特点**
-- 不需要打开 Cursor 或 VS Code
-- 鼠标悬停即可查看用量
-- 图标颜色随用量变化（绿 / 黄 / 红）
+- 无需安装任何依赖
+- 托盘图标 + 悬停显示用量
 - 每 5 分钟自动刷新
-- 查询用量**不会消耗**任何 token / 额度
+- 查询用量不消耗 token
+- 需要本机已安装 Python（用于读取 SQLite，大多数开发环境都有）
 
-## 使用方法
+## 备选：Electron 版
 
-```bash
-cd tray
-npm install
+如果更喜欢 Node 方案：
+
+```powershell
+npm install --registry=https://registry.npmmirror.com
 npm start
 ```
 
-或打包成便携版：
-
-```bash
-npm run dist
-```
-
-生成的 `.exe` 在 `dist/` 目录。
-
-## 原理
-
-1. 从 `%APPDATA%\Cursor\User\globalStorage\state.vscdb` 读取 `cursorAuth/accessToken`
-2. 调用 Cursor Dashboard 只读接口：
-   - `GetCurrentPeriodUsage`（Cursor Models / Other Models）
-   - `GetSandUsageStatus`（Grok Bot 周额度）
-3. 更新系统托盘图标和 Tooltip
-
-## 注意
-
-- 需要先在 Cursor 中登录过账号
-- 首次运行如果提示安全警告，选择仍要运行即可
+使用国内镜像可大幅加快 Electron 下载。

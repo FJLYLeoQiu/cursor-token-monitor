@@ -1,0 +1,25 @@
+{
+  "name": "cursor-usage-tray",
+  "version": "1.0.0",
+  "description": "Windows system tray monitor for Cursor Models / Other Models / Grok Bot usage",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win"
+  },
+  "dependencies": {
+    "sql.js": "^1.11.0"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.cursor.usage.tray",
+    "productName": "Cursor Usage Tray",
+    "win": {
+      "target": "portable",
+      "icon": "icon.ico"
+    }
+  }
+}

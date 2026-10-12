@@ -1,17 +1,17 @@
 {
   "name": "cursor-token-monitor",
-  "displayName": "Cursor Token Monitor",
-  "description": "Bottom status bar usage meter for Cursor (e.g. Auto $x.xx) — click to open the private Token Cockpit: burn runway, cache efficiency, Sankey, heatmap.",
+  "displayName": "Cursor Token Monitor (+ Grok Bot)",
+  "description": "Status bar usage meter for Cursor + Grok Bot weekly pool. Dual Pro quotas, burn runway, cache efficiency, Sankey, heatmap. Click for Token Cockpit.",
   "publisher": "ahmed404abd",
-  "version": "1.12.3",
+  "version": "1.13.0",
   "license": "MIT",
-  "homepage": "https://github.com/ahmed404abd/cursor-token-monitor",
+  "homepage": "https://github.com/FJLYLeoQiu/cursor-token-monitor",
   "bugs": {
-    "url": "https://github.com/ahmed404abd/cursor-token-monitor/issues"
+    "url": "https://github.com/FJLYLeoQiu/cursor-token-monitor/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/ahmed404abd/cursor-token-monitor.git"
+    "url": "https://github.com/FJLYLeoQiu/cursor-token-monitor.git"
   },
   "engines": {
     "vscode": "^1.85.0"
@@ -35,7 +35,9 @@
     "forecast",
     "heatmap",
     "sankey",
-    "observability"
+    "observability",
+    "grok bot",
+    "grokbot"
   ],
   "galleryBanner": {
     "color": "#050505",
